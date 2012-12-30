@@ -1,4 +1,11 @@
 iOS-rails-omniauth-facebook-login
 =================================
 
-Sample project - iOS client side facebook login to authenticate users on the rails (omniauth) based server side.
+Trying to understand how to make a native iOS app and a Rails based server that uses omniauth to work together.
+
+*Scenario*
+1. A user logs in using the native Facebook login in iOS6 or Safari fast-switching before iOS6
+2. This also logs in on the server side using access token received in step 1.
+
+*Why?*
+I wanted to login from the client and call REST APIs using the same facebook credential.

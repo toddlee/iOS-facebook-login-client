@@ -1,0 +1,3 @@
+[submodule "rails-server"]
+	path = rails-server
+	url = git@github.com:toddlee/rails-omniauth-rest-api-server.git

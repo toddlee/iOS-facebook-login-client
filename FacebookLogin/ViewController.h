@@ -10,5 +10,7 @@
 #import <FacebookSDK/FacebookSDK.h>
 
 @interface ViewController : UIViewController<FBLoginViewDelegate>
-
+{
+    NSMutableData *receivedData;
+}
 @end

@@ -8,10 +8,31 @@
 
 #import "ViewController.h"
 @interface ViewController ()
-
+- (void)authenticateOnServerSide:(NSString *)accessToken;
 @end
 
 @implementation ViewController
+
+- (void)authenticateOnServerSide:(NSString *)accessToken
+{
+    NSURL *url = [NSURL URLWithString:@"http://testserver.dev/auth/facebook_access_token/callback"];
+    NSMutableURLRequest *req = [[NSMutableURLRequest alloc] initWithURL:url];
+    
+    NSString *params = [NSString stringWithFormat:@"access_token=%@", accessToken];
+    [req setHTTPMethod:@"POST"];
+    [req setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURLResponse *res;
+        NSError *err;
+        [NSURLConnection sendSynchronousRequest:req returningResponse:&res error:&err];
+        if (!err) {
+            NSLog(@"The user is logged in on the server side too");
+        } else {
+            NSLog(@"Error occurred. %@", err);
+        }
+    });    
+}
 
 - (void)viewDidLoad
 {
@@ -37,11 +58,17 @@
 - (void)loginViewFetchedUserInfo:(FBLoginView *)loginView user:(id<FBGraphUser>)user
 {
     NSLog(@"Logged in user: %@", user);
-    NSLog(@"Access token: %@", [[FBSession activeSession] accessToken]);
+    
+    NSString *accessToken = [[FBSession activeSession] accessToken];
+    NSLog(@"Access token: %@", accessToken);
+    
+    // Now POST to the server.
+    [self authenticateOnServerSide:accessToken];
 }
 
 - (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView
 {
+    NSLog(@"Showing Logged In User: %@", [[FBSession activeSession] accessToken]);
 }
 
 - (void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView
